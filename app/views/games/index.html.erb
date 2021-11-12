@@ -1,0 +1,26 @@
+<h1>Games List</h1>
+
+
+<%= link_to new_game_path do %>
+   <i class="fas fa-plus"></i> Add new game
+<% end %>
+
+
+<ul>
+  <% @games.each do |game| %>
+    <li>
+      <%= link_to game_path(game) do  %>
+        <%= game.title %>
+      <% end %>
+
+      <%= link_to edit_game_path(game) do %>
+        <i class="fas fa-pencil-alt"></i>
+      <% end %>
+
+      <%= link_to game_path(game), method: :delete do %>
+        <i class="fas fa-trash-alt"></i>
+      <% end %>
+
+    </li>
+  <% end %>
+</ul>

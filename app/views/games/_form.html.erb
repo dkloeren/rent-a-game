@@ -1,0 +1,9 @@
+<% console %>
+<%= simple_form_for(@game) do |f| %>
+  <%= f.input :title, required: false %>
+  <%= f.association :genre, required: false %>
+  <%= f.association :console, required: false %>
+  <%= f.input :price_per_day, required: false %>
+  <%= f.input :image, as: :file %>
+  <%= f.submit %>
+<% end %>

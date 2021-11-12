@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_10_232912) do
+ActiveRecord::Schema.define(version: 2021_11_11_161313) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,10 +43,62 @@ ActiveRecord::Schema.define(version: 2021_11_10_232912) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "bookings", force: :cascade do |t|
+    t.date "start_date"
+    t.date "end_date"
+    t.integer "status"
+    t.bigint "game_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["game_id"], name: "index_bookings_on_game_id"
+    t.index ["user_id"], name: "index_bookings_on_user_id"
+  end
+
+  create_table "consoles", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "short"
+  end
+
+  create_table "games", force: :cascade do |t|
+    t.string "title"
+    t.float "price_per_day"
+    t.text "description"
+    t.bigint "genre_id", null: false
+    t.bigint "console_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["console_id"], name: "index_games_on_console_id"
+    t.index ["genre_id"], name: "index_games_on_genre_id"
+    t.index ["user_id"], name: "index_games_on_user_id"
+  end
+
   create_table "genres", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "profiles", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.text "address"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_profiles_on_user_id"
+  end
+
+  create_table "reviews", force: :cascade do |t|
+    t.bigint "booking_id", null: false
+    t.integer "rating"
+    t.text "comments"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["booking_id"], name: "index_reviews_on_booking_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -57,10 +109,19 @@ ActiveRecord::Schema.define(version: 2021_11_10_232912) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "username"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "bookings", "games"
+  add_foreign_key "bookings", "users"
+  add_foreign_key "games", "consoles"
+  add_foreign_key "games", "genres"
+  add_foreign_key "games", "users"
+  add_foreign_key "profiles", "users"
+  add_foreign_key "reviews", "bookings"
 end
