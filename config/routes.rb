@@ -10,8 +10,8 @@ Rails.application.routes.draw do
     end
 
     member do
-      get my_games
-      get my_bookings
+      get :my_games
+      get :my_bookings
     end
   end
 
